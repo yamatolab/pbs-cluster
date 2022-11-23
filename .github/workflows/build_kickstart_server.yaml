@@ -8,8 +8,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goos: ["linux", "windows", "darwin"]
+        goarch: ["amd64", "arm64"]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - uses: actions/setup-go@v3
         with:
@@ -20,9 +24,11 @@ jobs:
         working-directory: kickstart-server
         env:
           GIN_MODE: "release"
+          GOOS: "{{ matrix.goos }}"
+          GOARCH: "{{ matrix.goarch }}"
 
       - name: Upload Kickstart Server
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
-          name: kickstart-server
+          name: kickstart-server-{{ matrix.goos }}-{{ matrix.goarch }}
           path: kickstart-server/kickstart-server
