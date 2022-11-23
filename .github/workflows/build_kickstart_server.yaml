@@ -24,11 +24,11 @@ jobs:
         working-directory: kickstart-server
         env:
           GIN_MODE: "release"
-          GOOS: "{{ matrix.goos }}"
-          GOARCH: "{{ matrix.goarch }}"
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
 
       - name: Upload Kickstart Server
         uses: actions/upload-artifact@v3
         with:
-          name: kickstart-server-{{ matrix.goos }}-{{ matrix.goarch }}
+          name: kickstart-server-${{ matrix.goos }}-${{ matrix.goarch }}
           path: kickstart-server/kickstart-server
