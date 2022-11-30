@@ -1,6 +1,8 @@
 - hosts: localhost
   gather_facts: no
   become: yes
+  vars:
+    cobbler_server_ip: "192.168.122.207"
   tasks:
     - name: Install utility
       yum:
@@ -22,3 +24,25 @@
         enablerepo: "epel"
       with_items:
         - cobbler
+
+    - name: Write Cobbler settings.yaml
+      template:
+        src: settings.yaml.j2
+        dest: /etc/cobbler/settings.yaml
+        owner: root
+        group: root
+        mode: 0644
+      notify:
+        - Restart cobblerd
+
+    - name: Enable Cobbler
+      service:
+        name: cobblerd
+        state: started
+        enabled: yes
+
+  handlers:
+    - name: Restart cobblerd
+      service:
+        name: cobblerd
+        state: restarted
