@@ -11,12 +11,24 @@
       with_items:
         - tar
         - git
-    
+
     - name: Enable EPEL
       yum:
         name: epel-release
         state: present
-      
+
+    # Cobbler is not good at handling permissions,
+    # so we need to make sure selinux is in permissive mode.
+    - name: Write selinux config file
+      template:
+        src: selinux.j2
+        dest: /etc/selinux/config
+        owner: root
+        group: root
+        mode: 0644
+      notify:
+        - Reboot
+
     - name: Install Cobbler
       yum:
         name: "{{ item }}"
@@ -46,3 +58,6 @@
       service:
         name: cobblerd
         state: restarted
+
+    - name: Reboot
+      reboot:
