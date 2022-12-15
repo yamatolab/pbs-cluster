@@ -1,0 +1,6 @@
+---
+- name: Playbook for OpenPBS
+  ansible.builtin.import_playbook: pbs.yaml
+
+- name: Playbook for Monitoring
+  ansible.builtin.import_playbook: monitoring.yaml

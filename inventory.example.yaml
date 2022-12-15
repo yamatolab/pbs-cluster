@@ -1,0 +1,12 @@
+all:
+  pbs_master:
+    ansible_host: pbs_master
+  monitoring_server:
+    ansible_host: monitoring_server
+  children:
+    pbs_worker:
+      hosts:
+        pbs_worker1:
+          ansible_host: pbs_worker1
+        pbs_worker2:
+          ansible_host: pbs_worker2

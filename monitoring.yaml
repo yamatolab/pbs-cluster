@@ -1,0 +1,56 @@
+---
+- name: Ensure node-exporter setup
+  hosts: all
+  roles:
+    - cloudalchemy.node_exporter
+  tasks:
+    - name: Ensure node-exporter port is open
+      ansible.posix.firewalld:
+        port: 9100/tcp
+        permanent: true
+        state: enabled
+        immediate: true
+      become: true
+
+- name: Ensure prometheus setup
+  hosts: monitoring_server
+  roles:
+    - cloudalchemy.prometheus
+  vars:
+    prometheus_web_listen_address: 0.0.0.0:10090
+  tasks:
+    - name: Ensure prometheus port is open
+      ansible.posix.firewalld:
+        port: 10090/tcp
+        permanent: true
+        state: enabled
+        immediate: true
+      become: true
+
+- name: Ensure grafana setup
+  hosts: monitoring_server
+  roles:
+    - cloudalchemy.grafana
+  vars:
+    grafana_port: "8080"
+    grafana_datasources:
+      - name: Prometheus
+        type: prometheus
+        url: http://localhost:10090
+        isDefault: true
+    grafana_dashboards:
+      - name: Node Exporter Full
+        dashboard_id: "1860"
+        revision_id: "29"
+        datasource: "{{ grafana_datasources.0.name }}"
+    grafana_security:
+      admin_user: admin
+      admin_password: admin
+  tasks:
+    - name: Ensure grafana port is open
+      ansible.posix.firewalld:
+        port: 8080/tcp
+        permanent: true
+        state: enabled
+        immediate: true
+      become: true

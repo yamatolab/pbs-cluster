@@ -1,0 +1,40 @@
+name: Lint ansible playbook
+
+on:
+  pull_request:
+    paths:
+      - 'site.yaml'
+      - 'requirements.yml'
+      - 'requirements.txt'
+      - '.github/workflows/pr.yaml'
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    env:
+      ansible_list_result_file: ansible-lint.md
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+          cache: 'pip'
+
+      - name: Install Ansible
+        run: |
+          pip install -r requirements.txt
+          ansible-galaxy install -r requirements.yml
+
+      - name: Lint ansible
+        id: lint
+        run: ansible-lint -s --nocolor -f md site.yaml > ${{ env.ansible_list_result_file }}
+
+      - name: Comment on PR
+        uses: peter-evans/create-or-update-comment@v2
+        if: always()
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body-file: ${{ env.ansible_list_result_file }}

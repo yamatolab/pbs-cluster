@@ -1,0 +1,65 @@
+---
+- name: OpenPBS Installation
+  hosts: pbs_master
+  become: true
+  tasks:
+    - name: Ensure dnf-plugins-core is installed in order to hwloc-devel and libedit-devel packages
+      ansible.builtin.dnf:
+        name: dnf-plugins-core
+        state: present
+
+    - name: Dependencies installed
+      ansible.builtin.dnf:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - gcc
+        - make
+        - rpm-build
+        - libtool
+        - hwloc-devel
+        - libX11-devel
+        - libXt-devel
+        - libedit-devel
+        - libical-devel
+        - ncurses-devel
+        - perl
+        - postgresql-devel
+        - postgresql-contrib
+        - python3-devel
+        - tcl-devel
+        - tk-devel
+        - expat-devel
+        - openssl-devel
+        - libXext
+        - libXft
+        - autoconf
+        - automake
+        - gcc-c++
+
+    - name: Ensure swig rpm package file downloaded
+      ansible.builtin.get_url:
+        url: https://repo.almalinux.org/almalinux/8/AppStream/x86_64/os/Packages/swig-4.0.2-3.module_el8.4.0%2B2100%2B4bdcb5c6.x86_64.rpm
+        dest: /tmp/swig.rpm
+        mode: "0644"
+
+    - name: Ensure swig rpm package installed
+      ansible.builtin.yum:
+        name: /tmp/swig.rpm
+        state: present
+
+    - name: Ensure OpenPBS prerequirements packages are installed
+      ansible.builtin.dnf:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - expat
+        - libedit
+        - postgresql-server
+        - postgresql-contrib
+        - python3
+        - sendmail
+        - sudo
+        - tcl
+        - tk
+        - libical
