@@ -1,4 +1,7 @@
 ---
+- name: Playbook for prerequirements
+  ansible.builtin.import_playbook: prerequirements.yaml
+
 - name: Playbook for OpenPBS
   ansible.builtin.import_playbook: pbs.yaml
 

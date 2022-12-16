@@ -1,0 +1,11 @@
+- name: Prerequirements
+  become: true
+  hosts: all
+  tasks:
+    - name: Ensure SELinux Python packages installed
+      ansible.builtin.dnf:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - policycoreutils-python-utils
+        - python3-policycoreutils
