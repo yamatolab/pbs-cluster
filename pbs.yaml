@@ -2,7 +2,22 @@
 - name: OpenPBS Installation
   hosts: pbs_master
   become: true
+  vars:
+    pbs_server_ip: "192.168.122.36"
+    pbs_server_name: pbs-server
+    pbs_version: "22.05.11"
   tasks:
+    - name: Add pbs-master node to /etc/hosts
+      ansible.builtin.lineinfile:
+        path: /etc/hosts
+        line: "{{ pbs_server_ip}} {{ pbs_server_name }}"
+        state: present
+        create: yes
+    
+    - name: Update server hostname
+      ansible.builtin.hostname:
+        name: "{{ pbs_server_name }}"
+
     - name: Ensure dnf-plugins-core is installed in order to hwloc-devel and libedit-devel packages
       ansible.builtin.dnf:
         name: dnf-plugins-core
@@ -62,3 +77,44 @@
           - tcl
           - tk
           - libical
+
+    - name: Ensure OpenPBS tar file downloaded
+      ansible.builtin.get_url:
+        url: "https://github.com/openpbs/openpbs/archive/refs/tags/v{{ pbs_version }}.tar.gz"
+        dest: /root/openpbs.tar.gz
+      register: download_openpbs_tar
+    
+    - name: Ensure OpenPBS tar file extracted
+      ansible.builtin.unarchive:
+        src: /root/openpbs.tar.gz
+        dest: /root
+        remote_src: yes
+      when: download_openpbs_tar.changed
+
+    - name: Build OpenPBS
+      ansible.builtin.shell: |
+        ./autogen.sh \
+        && ./configure --prefix=/opt/openpbs \
+        && make -j2 && make install
+      args:
+        chdir: "/root/openpbs-{{ pbs_version }}"
+      ignore_errors: true
+      when: download_openpbs_tar.changed
+
+    - name: Post-install OpenPBS
+      ansible.builtin.shell: /opt/openpbs/libexec/pbs_postinstall
+      when: download_openpbs_tar.changed
+
+    - name: Ensure pbs_iff and pbs_rcp permissions are set
+      ansible.builtin.file:
+        path: /opt/openpbs/sbin/{{ item }}
+        mode: "4755"
+      with_items:
+        - pbs_iff
+        - pbs_rcp
+
+    - name: Ensure /etc/pbs.conf file is created
+      ansible.builtin.template:
+        src: pbs.conf.j2
+        dest: /etc/pbs.conf
+        mode: "0644"
