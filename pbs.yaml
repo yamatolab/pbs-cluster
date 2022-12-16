@@ -3,7 +3,7 @@
   hosts: pbs
   become: true
   vars:
-    pbs_version: "22.05.11"
+    pbs_version: 22.05.11
   tasks:
     - name: Update hostname
       ansible.builtin.hostname:
@@ -58,7 +58,7 @@
       ansible.builtin.yum:
         name: /tmp/swig.rpm
         state: present
-        disable_gpg_check: yes
+        disable_gpg_check: true
 
     - name: Ensure OpenPBS prerequirements packages are installed
       ansible.builtin.dnf:
@@ -77,15 +77,16 @@
 
     - name: Ensure OpenPBS tar file downloaded
       ansible.builtin.get_url:
-        url: "https://github.com/openpbs/openpbs/archive/refs/tags/v{{ pbs_version }}.tar.gz"
+        url: https://github.com/openpbs/openpbs/archive/refs/tags/v{{ pbs_version }}.tar.gz
         dest: /root/openpbs.tar.gz
+        mode: "0644"
       register: download_openpbs_tar
-    
+
     - name: Ensure OpenPBS tar file extracted
       ansible.builtin.unarchive:
         src: /root/openpbs.tar.gz
         dest: /root
-        remote_src: yes
+        remote_src: true
       when: download_openpbs_tar.changed
 
     - name: Build OpenPBS
@@ -94,7 +95,7 @@
         && ./configure --prefix=/opt/openpbs \
         && make -j2 && make install
       args:
-        chdir: "/root/openpbs-{{ pbs_version }}"
+        chdir: /root/openpbs-{{ pbs_version }}
       ignore_errors: true
       when: download_openpbs_tar.changed
 
@@ -119,11 +120,11 @@
         - Restart OpenPBS
 
     - name: Ensure ports are opened
-      ansible.builtin.firewalld:
+      ansible.posix.firewalld:
         port: "{{ item }}"
-        permanent: yes
+        permanent: true
         state: enabled
-        immediate: yes
+        immediate: true
       loop:
         - 15001/tcp # All communication to server
         - 15002/tcp # All communication to MoM

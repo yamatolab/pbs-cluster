@@ -40,7 +40,7 @@
   roles:
     - cloudalchemy.grafana
   vars:
-    grafana_yum_repo_template: "templates/custom/etc/yum.repos.d/grafana.repo.j2"
+    grafana_yum_repo_template: templates/custom/etc/yum.repos.d/grafana.repo.j2
     grafana_port: "8080"
     grafana_datasources:
       - name: Prometheus

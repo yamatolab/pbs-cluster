@@ -1,3 +1,4 @@
+---
 - name: Prerequirements
   become: true
   hosts: all
