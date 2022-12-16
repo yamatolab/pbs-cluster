@@ -136,13 +136,3 @@
       ansible.builtin.service:
         name: pbs
         state: restarted
-
-# - name: OpenPBS worker Configuration
-#   hosts: pbs_worker
-#   become: true
-#   tasks:
-#     - name: Ensure /etc/pbs.conf file is created
-#       ansible.builtin.template:
-#         src: pbs.conf.j2
-#         dest: /etc/pbs.conf
-#         mode: "0644"

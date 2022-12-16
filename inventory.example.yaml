@@ -5,23 +5,20 @@ all:
         pbs_master1:
           ansible_host: pbs_master
           pbs_hostname: pbs-server
-          pbs_ipv4: "192.168.10.1"
     pbs_worker:
       hosts:
         pbs_worker1:
           ansible_host: pbs_worker1
           pbs_hostname: pbs-worker1
-          pbs_ipv4: "192.168.11.1"
         pbs_worker2:
           ansible_host: pbs_worker2
           pbs_hostname: pbs-worker2
-          pbs_ipv4: "192.168.11.2"
         # Add more workers here
-    monitoring_server:
-      hosts:
-        monitoring_server:
-          ansible_host: monitoring_server
     pbs:
       children:
         pbs_master:
         pbs_worker:
+    monitoring_server:
+      hosts:
+        monitoring_server:
+          ansible_host: monitoring_server
