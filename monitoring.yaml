@@ -1,6 +1,7 @@
 ---
 - name: Ensure node-exporter setup
   hosts: all
+  become: true
   roles:
     - cloudalchemy.node_exporter
   tasks:
@@ -10,10 +11,16 @@
         permanent: true
         state: enabled
         immediate: true
-      become: true
+    - name: Ensure policycoreutils-python-utils is installed
+      ansible.builtin.dnf:
+        name:
+          - policycoreutils-python-utils
+          - python3-policycoreutils
+        state: present
 
 - name: Ensure prometheus setup
   hosts: monitoring_server
+  become: true
   roles:
     - cloudalchemy.prometheus
   vars:
@@ -25,7 +32,6 @@
         permanent: true
         state: enabled
         immediate: true
-      become: true
 
 - name: Ensure grafana setup
   hosts: monitoring_server

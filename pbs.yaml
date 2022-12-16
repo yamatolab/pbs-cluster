@@ -10,32 +10,31 @@
 
     - name: Dependencies installed
       ansible.builtin.dnf:
-        name: "{{ item }}"
         state: present
-      loop:
-        - gcc
-        - make
-        - rpm-build
-        - libtool
-        - hwloc-devel
-        - libX11-devel
-        - libXt-devel
-        - libedit-devel
-        - libical-devel
-        - ncurses-devel
-        - perl
-        - postgresql-devel
-        - postgresql-contrib
-        - python3-devel
-        - tcl-devel
-        - tk-devel
-        - expat-devel
-        - openssl-devel
-        - libXext
-        - libXft
-        - autoconf
-        - automake
-        - gcc-c++
+        name:
+          - gcc
+          - make
+          - rpm-build
+          - libtool
+          - hwloc-devel
+          - libX11-devel
+          - libXt-devel
+          - libedit-devel
+          - libical-devel
+          - ncurses-devel
+          - perl
+          - postgresql-devel
+          - postgresql-contrib
+          - python3-devel
+          - tcl-devel
+          - tk-devel
+          - expat-devel
+          - openssl-devel
+          - libXext
+          - libXft
+          - autoconf
+          - automake
+          - gcc-c++
 
     - name: Ensure swig rpm package file downloaded
       ansible.builtin.get_url:
@@ -47,19 +46,19 @@
       ansible.builtin.yum:
         name: /tmp/swig.rpm
         state: present
+        disable_gpg_check: yes
 
     - name: Ensure OpenPBS prerequirements packages are installed
       ansible.builtin.dnf:
-        name: "{{ item }}"
         state: present
-      loop:
-        - expat
-        - libedit
-        - postgresql-server
-        - postgresql-contrib
-        - python3
-        - sendmail
-        - sudo
-        - tcl
-        - tk
-        - libical
+        name:
+          - expat
+          - libedit
+          - postgresql-server
+          - postgresql-contrib
+          - python3
+          - sendmail
+          - sudo
+          - tcl
+          - tk
+          - libical
