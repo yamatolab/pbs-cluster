@@ -5,5 +5,5 @@ roles:
     version: 0.18.0
   # Because of unknown issue, we cannot use `ansible-galaxy install`.
   - name: cloudalchemy.prometheus
-    src: git+https://github.com/cloudalchemy/ansible-prometheus.git
-    version: 4.0.0
+    src: git+https://github.com/flat35hd99/ansible-prometheus.git
+    version: master

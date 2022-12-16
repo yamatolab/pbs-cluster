@@ -2,6 +2,7 @@
 - name: Ensure node-exporter setup
   hosts: all
   become: true
+  run_once: true
   roles:
     - cloudalchemy.node_exporter
   tasks:
@@ -11,12 +12,6 @@
         permanent: true
         state: enabled
         immediate: true
-    - name: Ensure policycoreutils-python-utils is installed
-      ansible.builtin.dnf:
-        name:
-          - policycoreutils-python-utils
-          - python3-policycoreutils
-        state: present
 
 - name: Ensure prometheus setup
   hosts: monitoring_server
@@ -25,6 +20,13 @@
     - cloudalchemy.prometheus
   vars:
     prometheus_web_listen_address: 0.0.0.0:10090
+    prometheus_targets:
+      node:
+        - targets:
+            - pbs_master1:9100
+            - pbs_worker2:9100
+            - pbs_worker3:9100
+            - pbs_worker4:9100
   tasks:
     - name: Ensure prometheus port is open
       ansible.posix.firewalld:
@@ -38,6 +40,7 @@
   roles:
     - cloudalchemy.grafana
   vars:
+    grafana_yum_repo_template: "templates/custom/etc/yum.repos.d/grafana.repo.j2"
     grafana_port: "8080"
     grafana_datasources:
       - name: Prometheus
