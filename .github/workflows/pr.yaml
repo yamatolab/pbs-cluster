@@ -30,7 +30,12 @@ jobs:
 
       - name: Lint ansible
         id: lint
-        run: ansible-lint -s --nocolor -f md site.yaml > ${{ env.ansible_list_result_file }}
+        run: |
+          ansible-lint \
+            --progressive \
+            --nocolor \
+            -f md \
+            site.yaml > ${{ env.ansible_list_result_file }}
 
       - name: Comment on PR
         uses: peter-evans/create-or-update-comment@v2
