@@ -4,6 +4,8 @@
 
 - name: Playbook for OpenPBS
   ansible.builtin.import_playbook: pbs.yaml
+  vars:
+    pbs_server_name: pbs-server # This value should be the same as pbs_hostname of pbs_master in inventory.yaml
 
 - name: Playbook for Monitoring
   ansible.builtin.import_playbook: monitoring.yaml

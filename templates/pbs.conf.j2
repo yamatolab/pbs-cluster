@@ -1,8 +1,15 @@
 PBS_SERVER={{ pbs_server_name }}
+{% if inventory_hostname == 'pbs_master1' %}
 PBS_START_SERVER=1
 PBS_START_SCHED=1
 PBS_START_COMM=1
+PBS_START_MOM=0
+{% else %}
+PBS_START_SERVER=0
+PBS_START_SCHED=0
+PBS_START_COMM=0
 PBS_START_MOM=1
+{% endif %}
 PBS_EXEC=/opt/openpbs
 PBS_HOME=/var/spool/pbs
 PBS_CORE_LIMIT=unlimited

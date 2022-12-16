@@ -1,22 +1,19 @@
 ---
 - name: OpenPBS Installation
-  hosts: pbs_master
+  hosts: pbs
   become: true
   vars:
-    pbs_server_ip: "192.168.122.36"
-    pbs_server_name: pbs-server
     pbs_version: "22.05.11"
   tasks:
-    - name: Add pbs-master node to /etc/hosts
-      ansible.builtin.lineinfile:
-        path: /etc/hosts
-        line: "{{ pbs_server_ip}} {{ pbs_server_name }}"
-        state: present
-        create: yes
-    
-    - name: Update server hostname
+    - name: Update hostname
       ansible.builtin.hostname:
-        name: "{{ pbs_server_name }}"
+        name: "{{ pbs_hostname }}"
+
+    - name: Ensure /etc/hosts file is updated
+      ansible.builtin.template:
+        src: etc/hosts.j2
+        dest: /etc/hosts
+        mode: "0644"
 
     - name: Ensure dnf-plugins-core is installed in order to hwloc-devel and libedit-devel packages
       ansible.builtin.dnf:
@@ -118,3 +115,34 @@
         src: pbs.conf.j2
         dest: /etc/pbs.conf
         mode: "0644"
+      notify:
+        - Restart OpenPBS
+
+    - name: Ensure ports are opened
+      ansible.builtin.firewalld:
+        port: "{{ item }}"
+        permanent: yes
+        state: enabled
+        immediate: yes
+      loop:
+        - 15001/tcp # All communication to server
+        - 15002/tcp # All communication to MoM
+        - 15007/tcp # PBS information storage and retrieval
+        # - 6200/tcp # All communication to license server
+        - 17001/tcp # All communication to pbs_comm
+
+  handlers:
+    - name: Restart OpenPBS
+      ansible.builtin.service:
+        name: pbs
+        state: restarted
+
+# - name: OpenPBS worker Configuration
+#   hosts: pbs_worker
+#   become: true
+#   tasks:
+#     - name: Ensure /etc/pbs.conf file is created
+#       ansible.builtin.template:
+#         src: pbs.conf.j2
+#         dest: /etc/pbs.conf
+#         mode: "0644"
