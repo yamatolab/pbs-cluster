@@ -1,0 +1,21 @@
+# MUST be configured
+USERNAME=
+GATEWAY_ADDRESS=
+DHCP_START_ADDRESS=
+DHCP_END_ADDRESS=
+
+# Probably you need to edit following values
+KS_URL=https://rd.taru.work/ksdev
+NETMASK=255.255.255.0
+
+# Most of you does not need to edit following values
+NETWORK_NAME="${USERNAME}-cluster"
+BRIDGE_NAME="virbr-${USERNAME}"
+DIST=dist
+OS="AlmaLinux"
+OS_VERSION="9.1"
+OS_ARCH="x86_64"
+OS_ISO_FILE=${OS}-${OS_VERSION}-${OS_ARCH}-minimal.iso
+OS_ISO_URL="http://ftp.sakura.ad.jp/almalinux/${OS_VERSION}/isos/${OS_ARCH}/${OS_ISO_FILE}"
+
+SLEEP_TIME_BETWEEN_VM_CREATION=20

@@ -1,0 +1,10 @@
+<network>
+  <name>TEMPLATE_NETWORK_NAME</name>
+  <forward mode='nat'/>
+  <bridge name='TEMPLATE_BRIDGE_NAME' stp='on' delay='0'/>
+  <ip address='TEMPLATE_GATEWAY_ADDRESS' netmask='TEMPLATE_NETMASK'>
+    <dhcp>
+      <range start='TEMPLATE_DHCP_START_ADDRESS' end='TEMPLATE_DHCP_END_ADDRESS'/>
+    </dhcp>
+  </ip>
+</network>
