@@ -1,0 +1,40 @@
+all:
+  vars:
+    ansible_user: root
+    ansible_ssh_pass: password
+    ansible_ssh_common_args: '-F develop/ssh_config'
+    normal_users:
+      - name: user1
+        uid: 2001
+        group: member
+        public_key: ""
+      - name: user2
+        uid: 2002
+        group: member
+        public_key: ""
+    normal_groups:
+      - name: member
+        gid: 2001
+  children:
+    pbs_master:
+      hosts:
+        pbs_master1:
+          ansible_host: pbs-master-root
+          pbs_hostname: pbs-server
+    pbs_worker:
+      hosts:
+        pbs_worker1:
+          ansible_host: pbs-worker1-root
+          pbs_hostname: pbs-worker1
+        pbs_worker2:
+          ansible_host: pbs-worker2-root
+          pbs_hostname: pbs-worker2
+        # Add more workers here
+    pbs:
+      children:
+        pbs_master:
+        pbs_worker:
+    # monitoring_server:
+    #   hosts:
+    #     monitoring_server:
+    #       ansible_host: monitoring_server
