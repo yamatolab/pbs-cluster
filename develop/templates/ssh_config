@@ -1,3 +1,6 @@
+Host *
+    StrictHostKeyChecking no
+
 Host mr pbs-master pbs-master-root
     HostName TEMPLATE_MASTER_HOSTNAME
     User root
