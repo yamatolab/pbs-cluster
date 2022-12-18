@@ -1,0 +1,5 @@
+- name: Create groups
+  ansible.builtin.group:
+    name: "{{ group.name }}"
+    gid: "{{ group.gid }}"
+    state: present

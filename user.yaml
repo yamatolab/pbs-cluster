@@ -1,0 +1,14 @@
+---
+- name: Manage normal groups
+  become: true
+  hosts: pbs
+  tasks:
+    - include_tasks: tasks/normal_groups.yaml
+      loop: "{{ normal_groups }}"
+      loop_control:
+        loop_var: group
+
+    - include_tasks: tasks/normal_users.yaml
+      loop: "{{ normal_users }}"
+      loop_control:
+        loop_var: user

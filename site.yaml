@@ -7,5 +7,8 @@
   vars:
     pbs_server_name: pbs-server # This value should be the same as pbs_hostname of pbs_master in inventory.yaml
 
+- name: Playbook for User
+  ansible.builtin.import_playbook: user.yaml
+
 - name: Playbook for Monitoring
   ansible.builtin.import_playbook: monitoring.yaml

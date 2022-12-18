@@ -1,0 +1,34 @@
+- name: Create users
+  ansible.builtin.user:
+    name: "{{ user.name }}"
+    uid: "{{ user.uid }}"
+    group: "{{ user.group }}"
+    state: present
+- name: Create home directory
+  ansible.builtin.file:
+    path: "/home/{{ user.name }}"
+    state: directory
+    owner: "{{ user.name }}"
+    group: "{{ user.group }}"
+    mode: 0700
+- name: Create .ssh directory
+  ansible.builtin.file:
+    path: "/home/{{ user.name }}/.ssh"
+    state: directory
+    owner: "{{ user.name }}"
+    group: "{{ user.group }}"
+    mode: 0700
+- name: Add authorized_keys file
+  ansible.builtin.file:
+    path: "/home/{{ user.name }}/.ssh/authorized_keys"
+    state: touch
+    owner: "{{ user.name }}"
+    group: "{{ user.group }}"
+    mode: 0600
+- name: Add public key to authorized_keys
+  ansible.builtin.lineinfile:
+    path: "/home/{{ user.name }}/.ssh/authorized_keys"
+    line: "{{ user.public_key }}"
+    owner: "{{ user.name }}"
+    group: "{{ user.group }}"
+    mode: 0600
