@@ -83,13 +83,30 @@ function create_vm {
 }
 
 echo "Start creating VMs. This takes a few minutes..."
-create_vm "${USERNAME}-pbs-master" &
+
+master_name="${USERNAME}-pbs-master"
+worker1_name="${USERNAME}-pbs-worker1"
+worker2_name="${USERNAME}-pbs-worker2"
+
+create_vm $master_name &
 sleep $SLEEP_TIME_BETWEEN_VM_CREATION
-create_vm "${USERNAME}-pbs-worker1" &
+create_vm $worker1_name &
 sleep $SLEEP_TIME_BETWEEN_VM_CREATION
-create_vm "${USERNAME}-pbs-worker2" &
+create_vm $worker2_name &
 
 # Wait until all VMs are created
 wait
 
 echo "Installation finished successfully!"
+
+# Obtain IP addresses of VMs
+# To write IP addresses to ssh_config file, we need to obtain IP addresses of VMs.
+REGEXP_MATCH_IP_ADDRESS='(\d{1,}\.){1,}\d{1,}'
+
+master_ip_address=`sudo virsh domifaddr $master_name | grep -oP $REGEXP_MATCH_IP_ADDRESS`
+worker1_ip_address=`sudo virsh domifaddr $worker1_name | grep -oP $REGEXP_MATCH_IP_ADDRESS`
+worker2_ip_address=`sudo virsh domifaddr $worker2_name | grep -oP $REGEXP_MATCH_IP_ADDRESS`
+
+sed "s/TEMPLATE_MASTER_HOSTNAME/${master_ip_address}/g" template/ssh_config > ssh_config
+sed -i -e "s/TEMPLATE_WORKER1_HOSTNAME/${worker1_ip_address}/g" ssh_config
+sed -i -e "s/TEMPLATE_WORKER2_HOSTNAME/${worker2_ip_address}/g" ssh_config

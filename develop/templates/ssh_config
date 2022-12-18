@@ -1,0 +1,36 @@
+Host mr pbs-master pbs-master-root
+    HostName TEMPLATE_MASTER_HOSTNAME
+    User root
+
+Host w1r pbs-worker1 pbs-worker1-root
+    HostName TEMPLATE_WORKER1_HOSTNAME
+    User root
+
+Host w1r pbs-worker2 pbs-worker2-root
+    HostName TEMPLATE_WORKER2_HOSTNAME
+    User root
+
+Host mu1 pbs-master-user1
+    HostName TEMPLATE_MASTER_HOSTNAME
+    User user1
+    IdentityFile ~/.ssh/only_localhost_rsa
+
+Host w1u1 pbs-worker1-user1
+    HostName TEMPLATE_WORKER1_HOSTNAME
+    User user1
+    IdentityFile ~/.ssh/only_localhost_rsa
+
+Host w1u2 pbs-worker1-user2
+    HostName TEMPLATE_WORKER1_HOSTNAME
+    User user2
+    IdentityFile ~/.ssh/only_localhost_rsa
+
+Host w2u1 pbs-worker2-user1
+    HostName TEMPLATE_WORKER2_HOSTNAME
+    User user1
+    IdentityFile ~/.ssh/only_localhost_rsa
+
+Host w2u2 pbs-worker2-user2
+    HostName TEMPLATE_WORKER2_HOSTNAME
+    User user2
+    IdentityFile ~/.ssh/only_localhost_rsa

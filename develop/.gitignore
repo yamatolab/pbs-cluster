@@ -1,2 +1,4 @@
 dist/*
 variables
+ssh_config
+!templates/ssh_config
