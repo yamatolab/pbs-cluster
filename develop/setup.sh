@@ -107,6 +107,6 @@ master_ip_address=`sudo virsh domifaddr $master_name | grep -oP $REGEXP_MATCH_IP
 worker1_ip_address=`sudo virsh domifaddr $worker1_name | grep -oP $REGEXP_MATCH_IP_ADDRESS`
 worker2_ip_address=`sudo virsh domifaddr $worker2_name | grep -oP $REGEXP_MATCH_IP_ADDRESS`
 
-sed "s/TEMPLATE_MASTER_HOSTNAME/${master_ip_address}/g" template/ssh_config > ssh_config
+sed "s/TEMPLATE_MASTER_HOSTNAME/${master_ip_address}/g" templates/ssh_config > ssh_config
 sed -i -e "s/TEMPLATE_WORKER1_HOSTNAME/${worker1_ip_address}/g" ssh_config
 sed -i -e "s/TEMPLATE_WORKER2_HOSTNAME/${worker2_ip_address}/g" ssh_config
