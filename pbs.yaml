@@ -143,3 +143,18 @@
       ansible.builtin.service:
         name: pbs
         state: restarted
+
+- name: OpenPBS master setup
+  hosts: pbs_master
+  become: true
+  tasks:
+    - name: Execute idempotent commands of PBS
+      ansible.builtin.command:
+        cmd: /opt/openpbs/bin/qmgr
+        stdin: "{{ lookup('file', 'templates/idempotent_pbs_commands.j2') }}"
+
+    - name: Execute non-idempotent commands of PBS
+      ansible.builtin.command:
+        cmd: /opt/openpbs/bin/qmgr
+        stdin: "{{ lookup('file', 'templates/non_idempotent_pbs_commands.j2') }}"
+      when: false

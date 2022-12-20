@@ -1,0 +1,16 @@
+# This file includes **idempotent** commands to configure the PBS server.
+# Idempotent is a term used to describe a command that can be run
+# multiple times without changing the state of the system.
+# 
+# For example, if you run the command "set server job_history_enable=True"
+# multiple times, the server will not be affected. It is idempotent.
+#
+# On the other hand, set server resources_default.ncpus += 1
+# will add 1 to the value of ncpus every time it is run.
+# The command is not idempotent.
+#
+# Keep this in mind when writing commands in this file.
+# If you want add non-idempotent commands, you can add them to
+# 
+set server job_history_enable=True
+set server job_history_duration=8640:00:00 # Retain job histories for 360 days
