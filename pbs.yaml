@@ -119,6 +119,11 @@
       notify:
         - Restart OpenPBS
 
+    - name: Ensure OpenPBS enabled
+      ansible.builtin.service:
+        name: pbs
+        enabled: yes
+
     - name: Ensure ports are opened
       ansible.posix.firewalld:
         port: "{{ item }}"
