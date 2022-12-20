@@ -1,5 +1,5 @@
 PBS_SERVER={{ pbs_server_name }}
-{% if inventory_hostname == 'pbs_master1' %}
+{% if pbs_hostname == 'pbs-server' %}
 PBS_START_SERVER=1
 PBS_START_SCHED=1
 PBS_START_COMM=1
