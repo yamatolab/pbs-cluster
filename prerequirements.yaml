@@ -10,3 +10,9 @@
       loop:
         - policycoreutils-python-utils
         - python3-policycoreutils
+
+    - name: Ensure chkconfig package installed
+      ansible.builtin.dnf:
+        name: chkconfig
+        state: present
+

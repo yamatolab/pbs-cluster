@@ -123,6 +123,7 @@
       ansible.builtin.service:
         name: pbs
         enabled: yes
+        state: started
 
     - name: Ensure ports are opened
       ansible.posix.firewalld:
